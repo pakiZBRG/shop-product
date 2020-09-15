@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const db = require("./config/keys").mongoURI;
-const items = require("./routes/api/items");
+const items = require("./routes/items");
 const app = express();
 
 app.use(express.json());
