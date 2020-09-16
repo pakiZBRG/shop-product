@@ -7,9 +7,16 @@ const app = express();
 
 app.use(express.json());
 
-mongoose.connect(db, {useNewUrlParser: true,useUnifiedTopology: true,})
-  .then(() => console.log("MongoDB Connected..."))
-  .catch(() => console.log("MongoDB Error"));
+mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connection.once('open', function(){
+    console.log('Conection has been made!');
+  }).on('error', function(error){
+      console.log('Error is: ', error);
+});
+
+// mongoose.connect(db, {useNewUrlParser: true, useUnifiedTopology: true})
+//   .then(() => console.log("MongoDB Connected..."))
+//   .catch(() => console.log("MongoDB Error"));
 
 //Use Routes
 app.use("/api/items", items);
