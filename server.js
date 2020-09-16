@@ -1,13 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require('path');
-const db = require("./config/keys").mongoURI;
+const { MONGO_URI } = require('./config');
 const items = require("./routes/items");
 const app = express();
 
 app.use(express.json());
 
-mongoose.connect(db, {useNewUrlParser: true,useUnifiedTopology: true,})
+mongoose.connect(MONGO_URI, {useNewUrlParser: true,useUnifiedTopology: true,})
   .then(() => console.log("MongoDB Connected..."))
   .catch(() => console.log("MongoDB Error"));
 
