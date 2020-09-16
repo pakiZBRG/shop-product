@@ -10,7 +10,7 @@ const User = require("../models/User");
 // Authenticate an user
 router.post('/', async (req, res) => {
     const {error} = loginValidation(req.body);
-    if(error) return res.status(400).send(error.details[0].message);
+    if(error) return res.status(400).json({msg: error.details[0].message});
 
     const user = await User.findOne({email: req.body.email});
     if(!user) return res.status(400).json({msg: 'No user with given email'});
@@ -18,10 +18,6 @@ router.post('/', async (req, res) => {
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if(!validPassword) return res.status(400).json({msg: "Wrong Password"});
 
-    // const token = jwt.sign({ _id: user.id }, process.env.JWT_TOKEN, { expiresIn: "1h" });
-    // res.cookie('X_AUTH', token).status(200).json({
-    //     message: `${user.username} is logged in`
-    // })
     jwt.sign(
         {id: user.id},
         config.get('jwtSecret'),

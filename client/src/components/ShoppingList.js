@@ -25,6 +25,14 @@ class ShoppingList extends Component {
     this.props.getItems();
   }
 
+  static propTypes = {
+    getItems: PropTypes.func.isRequired,
+    deleteItem: PropTypes.func.isRequired,
+    editItem: PropTypes.func.isRequired,
+    item: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool
+  };
+
   onDelete = id => this.props.deleteItem(id);
   toggle = () => this.setState({modal: !this.state.modal, editValue: ""});
   onChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -89,24 +97,31 @@ class ShoppingList extends Component {
                 <CSSTransition key={_id} timeout={500} classNames="fade">
                   <ListGroupItem>
                     {name}
-                    <Button
-                      className="remove-btn float-right"
-                      size="sm"
-                      color="info"
-                      onClick={this.onClick.bind(this, { _id, name })}
-                      title='Edit Item'
-                    >
-                      &#x2630;
-                    </Button>
-                    <Button
-                      className="remove-btn float-right mr-2"
-                      size="sm"
-                      color="danger"
-                      onClick={this.onDelete.bind(this, _id)}
-                      title='Delete Item'
-                    >
-                      &times;
-                    </Button>
+                    { this.props.isAuthenticated
+                        ?
+                      <>
+                        <Button
+                          className="remove-btn float-right"
+                          size="sm"
+                          color="info"
+                          onClick={this.onClick.bind(this, { _id, name })}
+                          title='Edit Item'
+                        >
+                          &#x2630;
+                        </Button>
+                        <Button
+                          className="remove-btn float-right mr-2"
+                          size="sm"
+                          color="danger"
+                          onClick={this.onDelete.bind(this, _id)}
+                          title='Delete Item'
+                        >
+                          &times;
+                        </Button>
+                      </>
+                        :
+                      null
+                    }
                   </ListGroupItem>
                 </CSSTransition>
               ))}
@@ -118,15 +133,9 @@ class ShoppingList extends Component {
   }
 }
 
-ShoppingList.propTypes = {
-  getItems: PropTypes.func.isRequired,
-  deleteItem: PropTypes.func.isRequired,
-  editItem: PropTypes.func.isRequired,
-  item: PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state) => ({
   item: state.item,
+  isAuthenticated: state.auth.isAuthenticated
 });
 
 export default connect(mapStateToProps, { getItems, deleteItem, editItem })(ShoppingList);
